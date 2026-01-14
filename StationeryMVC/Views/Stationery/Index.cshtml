@@ -1,28 +1,37 @@
-﻿@model List<StationeryMVC.Models.StationeryItem>
+﻿@using Microsoft.AspNetCore.Mvc.Rendering
+@model List<StationeryMVC.Models.StationeryItem>
 
-<h2>Stationery Items</h2>
+<h2 class="mb-3">📘 Stationery Items</h2>
 
-<a asp-action="Create">Add New Item</a>
+<a asp-action="Create" class="btn btn-primary mb-3">
+    ➕ Add New Item
+</a>
 
-<table class="table">
-    <thead>
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
         <tr>
+            <th>Category</th>
             <th>Name</th>
             <th>Quantity</th>
             <th>Price</th>
-            <th>Actions</th>
+            <th style="width:150px;">Actions</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
             <tr>
+                <td>@item.Category</td>
                 <td>@item.Name</td>
                 <td>@item.Quantity</td>
-                <td>@item.Price</td>
+                <td>R @item.Price</td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">
+                        ✏️ Edit
+                    </a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">
+                        🗑 Delete
+                    </a>
                 </td>
             </tr>
         }
