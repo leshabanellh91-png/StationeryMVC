@@ -1,76 +1,31 @@
 ﻿@model List<StationeryMVC.Models.StationeryItem>
-@using Microsoft.AspNetCore.Mvc.Rendering
 
-<h2 class="mb-3">📘 Stationery Items</h2>
+<h2 class="mb-3">📘 Stationery Store</h2>
 
-<!-- Buttons -->
-<a asp-action="Create" class="btn btn-primary mb-3">➕ Add New Item</a>
-<a asp-action="Dashboard" class="btn btn-info mb-3 ms-2">📊 Dashboard</a>
+<div class="mb-3">
+    <a asp-action="Create" class="btn btn-primary">➕ Add Item</a>
+    <a asp-action="Dashboard" class="btn btn-info ms-2">📊 Dashboard</a>
+</div>
 
-<!-- SEARCH FORM -->
-<form asp-action="Index" method="get" class="row mb-3">
-    <div class="col-md-4">
-        <input type="text" name="searchString" 
-               value="@(ViewBag.SearchString ?? "")" 
-               class="form-control" 
-               placeholder="Search by name..." />
-    </div>
-    <div class="col-md-4">
-        <select name="category" class="form-select">
-            <option value="">All Categories</option>
-            @if (ViewBag.Categories != null)
-            {
-                foreach (var cat in ViewBag.Categories as List<string>)
-                {
-                    string selected = "";
-                    if ((ViewBag.SelectedCategory ?? "") == cat)
-                    {
-                        selected = "selected";
-                    }
-                    /**/
-                }
-            }
-        </select>
-    </div>
-    <div class="col-md-4">
-        <button type="submit" class="btn btn-primary">Search</button>
-        <a asp-action="Index" class="btn btn-secondary">Reset</a>
-    </div>
-</form>
-
-<!-- ITEMS TABLE -->
-<table class="table table-bordered table-striped">
-    <thead class="table-dark">
-        <tr>
-            <th>Name</th>
-            <th>Category</th>
-            <th>Quantity</th>
-            <th>Price</th>
-            <th style="width:150px;">Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (Model != null && Model.Any())
-        {
-            foreach (var item in Model)
-            {
-                <tr>
-                    <td>@item.Name</td>
-                    <td>@item.Category</td>
-                    <td>@item.Quantity</td>
-                    <td>R @item.Price</td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">✏️ Edit</a>
-                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">🗑 Delete</a>
-                    </td>
-                </tr>
-            }
-        }
-        else
-        {
-            <tr>
-                <td colspan="5" class="text-center">No items found.</td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    @foreach (var item in Model)
+    {
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <img src="@item.ImageUrl" class="card-img-top" alt="@item.Name" style="height:200px; object-fit:cover;" />
+                <div class="card-body">
+                    <h5 class="card-title">@item.Name</h5>
+                    <p class="card-text">
+                        <strong>Category:</strong> @item.Category <br />
+                        <strong>Quantity:</strong> @item.Quantity <br />
+                        <strong>Price:</strong> R @item.Price
+                    </p>
+                </div>
+                <div class="card-footer d-flex justify-content-between">
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">✏️ Edit</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">🗑 Delete</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
