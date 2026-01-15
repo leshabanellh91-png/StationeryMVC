@@ -13,5 +13,10 @@ namespace StationeryMVC.Data
 
         // This tells EF Core to create a table for StationeryItem
         public DbSet<StationeryItem> StationeryItems { get; set; }
+    
+
+public DbSet<Quotation> Quotations { get; set; }
+public DbSet<QuotationItem> QuotationItems { get; set; }
+
     }
 }
