@@ -5,7 +5,8 @@ using StationeryMVC.Models;
 using Microsoft.AspNetCore.Hosting; // For IWebHostEnvironment
 using System.IO;
 using Microsoft.AspNetCore.Http;
-
+using System.Linq;
+using System.Collections.Generic;
 
 namespace StationeryMVC.Controllers
 {
@@ -64,21 +65,44 @@ namespace StationeryMVC.Controllers
 
             return View(item);
         }
+
+        // GET: Dashboard
         public IActionResult Dashboard()
         {
-            return View();
-        }
+            // Fetch all stationery items (never null)
+            var items = _context.StationeryItems.ToList() ?? new List<StationeryItem>();
 
+            // Calculate totals for dashboard
+            ViewBag.TotalItems = items.Count;
+            ViewBag.TotalQuantity = items.Sum(i => i.Quantity);
+            ViewBag.TotalCategories = items.Select(i => i.Category).Distinct().Count();
+            ViewBag.TotalValue = items.Sum(i => i.Price * i.Quantity);
+
+            // Ensure categories exist for dropdowns
+            PopulateCategories();
+
+            // Use the full path to the existing Index.cshtml view
+            return View("~/Views/Stationery/Index.cshtml", items);
+        }
 
         // GET: List all items
         public IActionResult Index()
         {
-            // Fetch all stationery items from the database
-            var items = _context.StationeryItems.ToList();
-            return View(items); // Pass the list to the view
+            // Fetch all stationery items from the database (never null)
+            var items = _context.StationeryItems.ToList() ?? new List<StationeryItem>();
+
+            // Ensure categories exist for the view
+            PopulateCategories();
+
+            // Calculate totals for dashboard section
+            ViewBag.TotalItems = items.Count;
+            ViewBag.TotalQuantity = items.Sum(i => i.Quantity);
+            ViewBag.TotalCategories = items.Select(i => i.Category).Distinct().Count();
+            ViewBag.TotalValue = items.Sum(i => i.Price * i.Quantity);
+
+            // Return items to the view
+            return View(items);
         }
-
-
 
         // Helper method to populate categories
         private void PopulateCategories()
@@ -91,9 +115,6 @@ namespace StationeryMVC.Controllers
                 "Office Supplies",
                 "Paper Products",
                 "Organizational Tools"
-
-
-
             };
 
             ViewBag.Categories = new SelectList(categories);
