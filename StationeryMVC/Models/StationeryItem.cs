@@ -16,10 +16,10 @@ namespace StationeryMVC.Models
         [Required(ErrorMessage = "Quantity is required")]
         [Range(1, 1000)]
         public int Quantity { get; set; }
-
         [Required(ErrorMessage = "Price is required")]
-        [Range(0.01, 10000)]
+        [Range(1.00, 10000.00, ErrorMessage = "Price must be between R1,00 and R10 000,00")]
         public decimal Price { get; set; }
+
 
         // Stores relative path of uploaded image
         [Display(Name = "Image")]

@@ -64,26 +64,36 @@ namespace StationeryMVC.Controllers
 
             return View(item);
         }
+        public IActionResult Dashboard()
+        {
+            return View();
+        }
+
 
         // GET: List all items
         public IActionResult Index()
         {
+            // Fetch all stationery items from the database
             var items = _context.StationeryItems.ToList();
-            return View(items);
+            return View(items); // Pass the list to the view
         }
+
+
 
         // Helper method to populate categories
         private void PopulateCategories()
         {
             var categories = new List<string>
             {
-                "Pocket File",
-                "Scissor",
-                "Pencil",
-                "Exercise Book",
-                "Pencil Case",
-                "Ruler",
-                "Crayon"
+                "Books",
+                "Writing",
+                "Art Supplies",
+                "Office Supplies",
+                "Paper Products",
+                "Organizational Tools"
+
+
+
             };
 
             ViewBag.Categories = new SelectList(categories);
