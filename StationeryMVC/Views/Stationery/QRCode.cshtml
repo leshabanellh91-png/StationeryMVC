@@ -1,0 +1,10 @@
+﻿@model StationeryMVC.Models.StationeryItem
+
+<h2>@Model.Name – QR Code</h2>
+
+<div>
+    <img src="@ViewBag.QRCodeImage" alt="QR Code for @Model.Name" style="width:250px;height:250px;" />
+</div>
+
+<p>Scan this code to view item details:</p>
+<a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-primary">View Item Details</a>

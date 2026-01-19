@@ -1,40 +1,41 @@
-﻿@using StationeryMVC.Data
-@inject ApplicationDbContext _context
+﻿<!DOCTYPE html>
 
-@{
-    var settings = _context.AppSettings.FirstOrDefault();
-}
-
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - @settings?.ShopName</title>
+    <title>@ViewData["Title"] - Triple L Stationery Shop</title>
+
+    ```
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/StationeryMVC.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    ```
+
 </head>
 <body>
+
+    ```
+    <!-- NAVBAR -->
     <header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
             <div class="container-fluid">
 
-                <!-- LOGO + SHOP NAME -->
-                <a class="navbar-brand d-flex align-items-center"
+                <!-- LOGO + BRAND -->
+                <a class="navbar-brand d-flex align-items-center gap-3"
                    asp-controller="Stationery"
                    asp-action="Index">
 
-                    @if (!string.IsNullOrEmpty(settings?.LogoPath))
-                    {
-                        <img src="@settings.LogoPath"
-                             alt="Logo"
-                             height="40"
-                             class="me-2" />
-                    }
+                    <img src="~/images/TripleL.png"
+                         alt="Triple L Logo"
+                         height="45" />
 
-                    <span>@settings?.ShopName</span>
+                    <div class="brand-text">
+                        <div class="brand-title fw-bold">Triple L Stationery Shop</div>
+                        <div class="brand-slogan small">
+                            Everything You Need for School &amp; Office
+                        </div>
+                    </div>
                 </a>
 
                 <button class="navbar-toggler" type="button"
@@ -43,6 +44,7 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
+                <!-- NAV LINKS -->
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
 
@@ -52,17 +54,21 @@
                                asp-action="Index">Home</a>
                         </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link"
-                               asp-controller="Stationery"
-                               asp-action="Create">Add Item</a>
-                        </li>
+                        <!-- ADMIN ONLY -->
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link"
+                                   asp-controller="Stationery"
+                                   asp-action="Create">Add Item</a>
+                            </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link"
-                               asp-controller="Dashboard"
-                               asp-action="Index">Dashboard</a>
-                        </li>
+                            <li class="nav-item">
+                                <a class="nav-link"
+                                   asp-controller="Dashboard"
+                                   asp-action="Index">Dashboard</a>
+                            </li>
+                        }
 
                         <li class="nav-item">
                             <a class="nav-link"
@@ -70,35 +76,51 @@
                                asp-action="Index">Quotations</a>
                         </li>
 
+                        <!-- AUTH LINKS -->
+                        @if (User.Identity != null && User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <form asp-controller="Account"
+                                      asp-action="Logout"
+                                      method="post"
+                                      class="d-inline">
+                                    <button type="submit"
+                                            class="btn btn-link nav-link">
+                                        Logout
+                                    </button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link"
+                                   asp-controller="Account"
+                                   asp-action="Login">Login</a>
+                            </li>
+                        }
+
                     </ul>
                 </div>
+
             </div>
         </nav>
-
-        <!-- SLOGAN -->
-        @if (!string.IsNullOrEmpty(settings?.Slogan))
-        {
-            <div class="text-center text-muted mb-3">
-                <em>@settings.Slogan</em>
-            </div>
-        }
     </header>
 
-    <div class="container">
+    <!-- MAIN CONTENT -->
+    <main class="container mt-4">
         @RenderBody()
-    </div>
+    </main>
 
-    <footer class="border-top footer text-muted mt-4">
-        <div class="container">
-            &copy; 2026 - @settings?.ShopName -
-            <a asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
+    <!-- FOOTER -->
+    <footer class="text-center text-muted mt-5 mb-3">
+        © 2026 Triple L Stationery Shop
     </footer>
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <!-- SCRIPTS -->
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+    ```
 
-    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

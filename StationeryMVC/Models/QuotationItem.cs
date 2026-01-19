@@ -29,10 +29,13 @@ namespace StationeryMVC.Models
         [Column(TypeName = "decimal(18,2)")]
         public decimal Price { get; set; }
 
+
         public int Quantity { get; set; }
 
         // Computed (not stored)
         [NotMapped]
-        public decimal Total => Price * Quantity;
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal TotalAmount { get; set; }
+
     }
 }

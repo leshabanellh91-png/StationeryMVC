@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using StationeryMVC.Data;
 using System.Globalization;
+using System.Linq;
 
+[Authorize(Roles = "Admin")] // 🔒 ADMIN ONLY
 public class DashboardController : Controller
 {
     private readonly ApplicationDbContext _context;

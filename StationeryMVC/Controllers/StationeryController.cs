@@ -5,15 +5,15 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
-
-
 using StationeryMVC.Data;
 using StationeryMVC.Models;
-
+using QRCoder;
 using System;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace StationeryMVC.Controllers
 {
@@ -142,30 +142,17 @@ namespace StationeryMVC.Controllers
         // ===============================
         // EDIT – GET
         // ===============================
-        public IActionResult Edit(int? id)
+        [Authorize(Roles = "Admin")]
+        public IActionResult Edit(int id)
         {
-            if (id == null)
-                return NotFound();
-
             var item = _context.StationeryItems.Find(id);
+
             if (item == null)
                 return NotFound();
 
             PopulateCategories();
             return View(item);
         }
-        [Authorize(Roles = "Admin")]
-public IActionResult Edit(int id)
-{
-    var item = _context.StationeryItems.Find(id);
-
-    if (item == null)
-        return NotFound();
-
-    PopulateCategories();
-    return View(item);
-}
-
 
         // ===============================
         // EDIT – POST
@@ -215,7 +202,6 @@ public IActionResult Edit(int id)
             }
             else
             {
-                // Preserve existing ImageUrl
                 var existingItem = _context.StationeryItems.AsNoTracking().FirstOrDefault(x => x.Id == id);
                 if (existingItem != null)
                     item.ImageUrl = existingItem.ImageUrl ?? "/images/default.png";
@@ -238,7 +224,7 @@ public IActionResult Edit(int id)
         }
 
         // ===============================
-        // DELETE – GET (confirmation)
+        // DELETE – GET
         // ===============================
         public IActionResult Delete(int? id)
         {
@@ -265,7 +251,34 @@ public IActionResult Edit(int id)
                 _context.StationeryItems.Remove(item);
                 _context.SaveChanges();
             }
-            return RedirectToAction(nameof(Index)); 
+            return RedirectToAction(nameof(Index));
+        }
+
+        // ===============================
+        // QR CODE – Generate & Display
+        // ===============================
+        public IActionResult QRCode(int id)
+        {
+            var item = _context.StationeryItems.FirstOrDefault(s => s.Id == id);
+            if (item == null)
+                return NotFound();
+
+            string itemUrl = Url.Action("Details", "Stationery", new { id = item.Id }, Request.Scheme);
+
+            using (var qrGenerator = new QRCodeGenerator())
+            {
+                var qrCodeData = qrGenerator.CreateQrCode(itemUrl, QRCodeGenerator.ECCLevel.Q);
+                using (var qrCode = new QRCode(qrCodeData))
+                using (var bitmap = qrCode.GetGraphic(20))
+                using (var stream = new MemoryStream())
+                {
+                    bitmap.Save(stream, ImageFormat.Png);
+                    string base64Image = Convert.ToBase64String(stream.ToArray());
+                    ViewBag.QRCodeImage = "data:image/png;base64," + base64Image;
+                }
+            }
+
+            return View(item);
         }
 
         // ===============================

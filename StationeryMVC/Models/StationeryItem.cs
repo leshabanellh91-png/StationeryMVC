@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace StationeryMVC.Models
 {
@@ -18,11 +19,14 @@ namespace StationeryMVC.Models
         public int Quantity { get; set; }
         [Required(ErrorMessage = "Price is required")]
         [Range(1.00, 10000.00, ErrorMessage = "Price must be between R1,00 and R10 000,00")]
+        [Column(TypeName = "decimal(18,2)")]
         public decimal Price { get; set; }
+
 
 
         // Stores relative path of uploaded image
         [Display(Name = "Image")]
         public string ImageUrl { get; set; } = "/images/default.png";
+        public string? QRCodeImagePath { get; set; } // store QR code image
     }
 }

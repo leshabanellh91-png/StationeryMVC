@@ -1,3 +1,4 @@
+
 /* =========================
    Base font sizing
    ========================= */
@@ -68,3 +69,43 @@ body {
 .card-img-top {
     border-bottom: 1px solid #ddd;
 }
+/* NAVBAR BRAND */
+.navbar-logo {
+    height: 55px;
+    width: auto;
+    object-fit: contain;
+}
+
+.brand-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+}
+
+.brand-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.brand-slogan {
+    font-size: 0.85rem;
+    font-style: italic;
+    color: #e0e0e0;
+}
+
+/* Mobile tweaks */
+@media (max-width: 576px) {
+    .brand-title {
+        font-size: 1.2rem;
+    }
+
+    .brand-slogan {
+        display: none;
+    }
+
+    .navbar-logo {
+        height: 45px;
+    }
+}
+
