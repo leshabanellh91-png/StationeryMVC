@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Authorization;
+
 
 using StationeryMVC.Data;
 using StationeryMVC.Models;
@@ -152,6 +154,18 @@ namespace StationeryMVC.Controllers
             PopulateCategories();
             return View(item);
         }
+        [Authorize(Roles = "Admin")]
+public IActionResult Edit(int id)
+{
+    var item = _context.StationeryItems.Find(id);
+
+    if (item == null)
+        return NotFound();
+
+    PopulateCategories();
+    return View(item);
+}
+
 
         // ===============================
         // EDIT – POST
@@ -251,7 +265,7 @@ namespace StationeryMVC.Controllers
                 _context.StationeryItems.Remove(item);
                 _context.SaveChanges();
             }
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index)); 
         }
 
         // ===============================
