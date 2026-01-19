@@ -1,10 +1,17 @@
-﻿<!DOCTYPE html>
+﻿@using StationeryMVC.Data
+@inject ApplicationDbContext _context
+
+@{
+    var settings = _context.AppSettings.FirstOrDefault();
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - StationeryMVC</title>
-    <script type="importmap"></script>
+    <title>@ViewData["Title"] - @settings?.ShopName</title>
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/StationeryMVC.styles.css" asp-append-version="true" />
@@ -13,46 +20,85 @@
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-controller="Stationery" asp-action="Index">Stationery Store</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+
+                <!-- LOGO + SHOP NAME -->
+                <a class="navbar-brand d-flex align-items-center"
+                   asp-controller="Stationery"
+                   asp-action="Index">
+
+                    @if (!string.IsNullOrEmpty(settings?.LogoPath))
+                    {
+                        <img src="@settings.LogoPath"
+                             alt="Logo"
+                             height="40"
+                             class="me-2" />
+                    }
+
+                    <span>@settings?.ShopName</span>
+                </a>
+
+                <button class="navbar-toggler" type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbarNav">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
+
                         <li class="nav-item">
-                            <a class="nav-link" asp-action="Index" asp-controller="Stationery">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-action="Create" asp-controller="Stationery">Add Item</a>
-                            </li>
-                        <li class="nav-item">
-                            <a a class="nav-link" asp-action="Index" asp-controller="Dashboard">Dashboard</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Quotation" asp-action="Index">Quotations</a>
+                            <a class="nav-link"
+                               asp-controller="Stationery"
+                               asp-action="Index">Home</a>
                         </li>
 
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               asp-controller="Stationery"
+                               asp-action="Create">Add Item</a>
+                        </li>
 
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               asp-controller="Dashboard"
+                               asp-action="Index">Dashboard</a>
+                        </li>
 
-
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               asp-controller="Quotation"
+                               asp-action="Index">Quotations</a>
+                        </li>
 
                     </ul>
                 </div>
             </div>
         </nav>
-        <div class="container">
-            @RenderBody()
-        </div>
 
+        <!-- SLOGAN -->
+        @if (!string.IsNullOrEmpty(settings?.Slogan))
+        {
+            <div class="text-center text-muted mb-3">
+                <em>@settings.Slogan</em>
+            </div>
+        }
+    </header>
 
-    <footer class="border-top footer text-muted">
+    <div class="container">
+        @RenderBody()
+    </div>
+
+    <footer class="border-top footer text-muted mt-4">
         <div class="container">
-            &copy; 2026 - StationeryMVC - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2026 - @settings?.ShopName -
+            <a asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
