@@ -30,3 +30,42 @@ It communicates between the Model and View layers.
 - Database: SQL Server
 - ORM: Entity Framework Core
 - QR Code Generation: QR Code library
+
+## 4. Entity Relationship Diagram (ERD)
+
+The ERD illustrates the structure of the database and the relationships
+between core entities used in the StationeryMVC system.
+
+```mermaid
+erDiagram
+    STATIONERY_ITEM ||--o{ QUOTATION_ITEM : included_in
+    QUOTATION ||--|{ QUOTATION_ITEM : contains
+
+    STATIONERY_ITEM {
+        int ItemId
+        string Name
+        string Category
+        int Quantity
+        decimal Price
+        string ImagePath
+        string QrCode
+    }
+
+    QUOTATION {
+        int QuotationId
+        date QuotationDate
+        decimal TotalAmount
+    }
+
+    QUOTATION_ITEM {
+        int QuotationItemId
+        int Quantity
+        decimal UnitPrice
+    }
+
+    APP_SETTINGS {
+        int AppSettingsId
+        string ShopName
+        string Slogan
+        string LogoPath
+    }
