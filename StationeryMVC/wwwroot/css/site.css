@@ -1,111 +1,131 @@
-
-/* =========================
-   Base font sizing
-   ========================= */
-html {
-    font-size: 14px;
-}
-
-@media (min-width: 768px) {
-    html {
-        font-size: 16px;
-    }
-}
-
-/* =========================
-   Focus styles
-   ========================= */
-.btn:focus,
-.btn:active:focus,
-.btn-link.nav-link:focus,
-.form-control:focus,
-.form-check-input:focus {
-    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-/* =========================
-   Layout & spacing
-   ========================= */
-html {
-    position: relative;
-    min-height: 100%;
-}
-
 body {
-    margin-bottom: 60px;
-    /* Stationery-themed background */
-    background-color: #fdf6e3; /* soft paper-like color */
-    background-image: url('/images/stationery-bg.png'); /* optional light stationery pattern */
+    margin: 0;
+    padding: 0;
+    background-color: #fdf6e3;
+    background-image: url('/images/background.jpg');
     background-repeat: repeat;
     background-size: auto;
+    background-attachment: fixed;
+    font-family: Arial, sans-serif;
 }
 
-/* =========================
-   Form styles
-   ========================= */
-.form-floating > .form-control-plaintext::placeholder,
-.form-floating > .form-control::placeholder {
-    color: var(--bs-secondary-color);
-    text-align: end;
-}
-
-.form-floating > .form-control-plaintext:focus::placeholder,
-.form-floating > .form-control:focus::placeholder {
-    text-align: start;
-}
-
-/* =========================
-   Card styles
-   ========================= */
 .card {
+    max-width: 420px;
+    margin: 70px auto;
+    padding: 35px;
+    border-radius: 12px;
+    background-color: rgba(255,255,255,0.95);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
     transition: transform 0.2s;
-    background-color: #ffffffcc; /* slightly transparent white for readability */
 }
 
     .card:hover {
         transform: scale(1.03);
     }
 
-.card-img-top {
-    border-bottom: 1px solid #ddd;
-}
-/* NAVBAR BRAND */
-.navbar-logo {
-    height: 55px;
-    width: auto;
-    object-fit: contain;
+h2 {
+    text-align: center;
+    margin-bottom: 28px;
 }
 
-.brand-text {
+.form-group {
+    margin-bottom: 18px;
+}
+
+label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: block;
+}
+
+.form-control {
+    width: 100%;
+    padding: 11px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+    .form-control:focus {
+        outline: none;
+        border-color: #007bff;
+    }
+
+.password-wrapper {
+    position: relative;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 13px;
+    color: #007bff;
+    cursor: pointer;
+}
+
+.options-row {
     display: flex;
-    flex-direction: column;
-    line-height: 1.1;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    margin-bottom: 18px;
 }
 
-.brand-title {
-    font-size: 1.6rem;
-    font-weight: 700;
-    color: #ffffff;
+    .options-row a {
+        text-decoration: none;
+        color: #007bff;
+    }
+
+        .options-row a:hover {
+            text-decoration: underline;
+        }
+
+.login-btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
 }
 
-.brand-slogan {
-    font-size: 0.85rem;
-    font-style: italic;
-    color: #e0e0e0;
+    .login-btn:hover {
+        background-color: #0056b3;
+    }
+
+.error-message {
+    color: red;
+    text-align: center;
+    margin-top: 15px;
 }
 
-/* Mobile tweaks */
+.register-link {
+    text-align: center;
+    margin-top: 15px;
+}
+
+    .register-link a {
+        text-decoration: none;
+        color: #28a745;
+        font-weight: bold;
+    }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+/* Mobile responsive */
 @media (max-width: 576px) {
-    .brand-title {
-        font-size: 1.2rem;
+    .card {
+        margin: 40px 15px;
+        padding: 25px;
     }
 
-    .brand-slogan {
-        display: none;
-    }
-
-    .navbar-logo {
-        height: 45px;
+    .login-btn {
+        font-size: 14px;
+        padding: 10px;
     }
 }
-

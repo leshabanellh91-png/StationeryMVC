@@ -1,0 +1,54 @@
+﻿@{
+    ViewData["Title"] = "Login";
+}
+
+<link rel="stylesheet" href="~/css/site.css" />
+
+<div class="card login-container">
+    <h2>Login</h2>
+
+    <form asp-action="Login" asp-controller="Account" method="post">
+        <div class="form-group">
+            <label for="Email">Email Address</label>
+            <input type="email" id="Email" name="Email" class="form-control" placeholder="Enter your email" required />
+        </div>
+
+        <div class="form-group">
+            <label for="Password">Password</label>
+            <div class="password-wrapper">
+                <input type="password" id="Password" name="Password" class="form-control" placeholder="Enter your password" required />
+                <span class="toggle-password" onclick="togglePassword()">Show</span>
+            </div>
+        </div>
+
+        <div class="options-row">
+            <label><input type="checkbox" name="RememberMe" /> Remember Me</label>
+            <a href="#">Forgot Password?</a>
+        </div>
+
+        <button type="submit" class="login-btn">Login</button>
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="error-message">@ViewBag.Error</div>
+        }
+
+        <div class="register-link">
+            <a asp-action="Register" asp-controller="Account">Don't have an account? Register</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    function togglePassword() {
+        var passwordInput = document.getElementById("Password");
+        var toggleText = document.querySelector(".toggle-password");
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            toggleText.innerText = "Hide";
+        } else {
+            passwordInput.type = "password";
+            toggleText.innerText = "Show";
+        }
+    }
+</script>

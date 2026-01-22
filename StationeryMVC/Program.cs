@@ -9,31 +9,48 @@ var builder = WebApplication.CreateBuilder(args);
 // ====================
 // SERVICES
 // ====================
+
+// Add MVC
 builder.Services.AddControllersWithViews();
 
-// ✅ Add EF Core with SQL Server
+// ✅ EF Core with SQL Server
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection"))
 );
 
-// ✅ Add Identity
+// ✅ ASP.NET Identity
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;
+    options.Password.RequireDigit = true;
+    options.Password.RequiredLength = 6;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = true;
 })
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
 
+// ✅ Session (for STEP 4: store user login info)
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
 var app = builder.Build();
 
 // ====================
-// APPLY MIGRATIONS & SEED SETTINGS
+// APPLY MIGRATIONS & SEED DATA
 // ====================
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     context.Database.Migrate();
 
+    // Seed AppSettings
     if (!context.AppSettings.Any())
     {
         context.AppSettings.Add(new AppSettings
@@ -47,19 +64,8 @@ using (var scope = app.Services.CreateScope())
 }
 
 // ====================
-// ROTATIVA CONFIG
+// SEED ROLES & ADMIN USER
 // ====================
-RotativaConfiguration.Setup(app.Environment.WebRootPath, "Rotativa");
-
-// ====================
-// MIDDLEWARE
-// ====================
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Home/Error");
-    app.UseHsts();
-}
-
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -83,18 +89,43 @@ using (var scope = app.Services.CreateScope())
             Email = adminEmail,
             EmailConfirmed = true
         };
-        await userManager.CreateAsync(adminUser, adminPassword);
-        await userManager.AddToRoleAsync(adminUser, "Admin");
+
+        var result = await userManager.CreateAsync(adminUser, adminPassword);
+        if (result.Succeeded)
+        {
+            await userManager.AddToRoleAsync(adminUser, "Admin");
+        }
     }
+}
+
+// ====================
+// ROTATIVA CONFIG
+// ====================
+RotativaConfiguration.Setup(app.Environment.WebRootPath, "Rotativa");
+
+// ====================
+// MIDDLEWARE
+// ====================
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Home/Error");
+    app.UseHsts();
 }
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
 app.UseRouting();
+
+// ✅ Session MUST come before Authentication
+app.UseSession();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
+// ====================
+// ROUTING
+// ====================
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Stationery}/{action=Index}/{id?}"

@@ -14,12 +14,12 @@ namespace StationeryMVC.Data
         // App settings
         public DbSet<AppSettings> AppSettings { get; set; }
 
-        // Stationery domain
         public DbSet<StationeryItem> StationeryItems { get; set; }
 
         // Quotations
         public DbSet<Quotation> Quotations { get; set; }
         public DbSet<QuotationItem> QuotationItems { get; set; }
+         public DbSet<User> Users { get; set; }
 
         // Decimal precision fix
         protected override void OnModelCreating(ModelBuilder builder)

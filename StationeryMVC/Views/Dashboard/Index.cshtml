@@ -1,4 +1,4 @@
-﻿@model IEnumerable<StationeryMVC.Models.StationeryItem>
+﻿@model StationeryMVC.Models.ViewModels.DashboardViewModel
 @using System.Globalization
 
 <h2 class="mb-4">📊 Stationery Dashboard</h2>
@@ -7,41 +7,37 @@
     <div class="col-md-3">
         <div class="card shadow-sm p-3 mb-3 text-center">
             <h5>Total Items</h5>
-            <h3>@(ViewBag.TotalItems ?? 0)</h3>
+            <h3>@Model.TotalItems</h3>
         </div>
     </div>
 
     <div class="col-md-3">
         <div class="card shadow-sm p-3 mb-3 text-center">
             <h5>Total Quantity</h5>
-            <h3>@(ViewBag.TotalQuantity ?? 0)</h3>
+            <h3>@Model.TotalQuantity</h3>
         </div>
     </div>
 
     <div class="col-md-3">
         <div class="card shadow-sm p-3 mb-3 text-center">
             <h5>Total Categories</h5>
-            <h3>@(ViewBag.TotalCategories ?? 0)</h3>
+            <h3>@Model.TotalCategories</h3>
         </div>
     </div>
 
     <div class="col-md-3">
         <div class="card shadow-sm p-3 mb-3 text-center">
             <h5>Total Stock Value</h5>
-            <h3>
-                @((ViewBag.TotalValue != null)
-                                ? ((decimal)ViewBag.TotalValue).ToString("C", new CultureInfo("en-ZA"))
-                                : "R0,00")
-            </h3>
+            <h3>@Model.TotalValue.ToString("C", new CultureInfo("en-ZA"))</h3>
         </div>
     </div>
 </div>
 
-@if (Model != null && Model.Any(i => i.Quantity <= 10))
+@if (Model.LowStockItems != null && Model.LowStockItems.Any())
 {
     <h3 class="mt-4">⚠️ Low Stock Items</h3>
     <div class="row">
-        @foreach (var item in Model.Where(i => i.Quantity <= 10))
+        @foreach (var item in Model.LowStockItems)
         {
             <div class="col-md-3 mb-4">
                 <div class="card h-100 shadow-sm border-danger">

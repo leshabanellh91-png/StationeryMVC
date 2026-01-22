@@ -1,21 +1,17 @@
 ﻿<!DOCTYPE html>
-
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <title>@ViewData["Title"] - Triple L Stationery Shop</title>
-
-    ```
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
+    <!-- BOOTSTRAP CSS -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <!-- SITE CSS (Stationery theme + responsive forms) -->
     <link rel="stylesheet" href="~/css/site.css" />
-    ```
-
 </head>
-<body>
-
-    ```
+<body class="@($"{ViewData["Controller"]}-{ViewData["Action"]}")">
     <!-- NAVBAR -->
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
@@ -54,7 +50,7 @@
                                asp-action="Index">Home</a>
                         </li>
 
-                        <!-- ADMIN ONLY -->
+                        @* ADMIN ONLY LINKS *@
                         @if (User.IsInRole("Admin"))
                         {
                             <li class="nav-item">
@@ -76,7 +72,7 @@
                                asp-action="Index">Quotations</a>
                         </li>
 
-                        <!-- AUTH LINKS -->
+                        @* AUTH LINKS *@
                         @if (User.Identity != null && User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
@@ -120,7 +116,5 @@
     <!-- SCRIPTS -->
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     @RenderSection("Scripts", required: false)
-    ```
-
 </body>
 </html>
